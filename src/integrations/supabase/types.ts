@@ -14,7 +14,190 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      activities: {
+        Row: {
+          activity_type: string
+          created_at: string
+          credits_earned: number
+          duration_minutes: number
+          id: string
+          intensity: Database["public"]["Enums"]["activity_intensity"]
+          notes: string | null
+          performed_at: string
+          screenshot_url: string | null
+          source_app: string | null
+          user_id: string
+          validated: boolean
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string
+          credits_earned?: number
+          duration_minutes: number
+          id?: string
+          intensity: Database["public"]["Enums"]["activity_intensity"]
+          notes?: string | null
+          performed_at: string
+          screenshot_url?: string | null
+          source_app?: string | null
+          user_id: string
+          validated?: boolean
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string
+          credits_earned?: number
+          duration_minutes?: number
+          id?: string
+          intensity?: Database["public"]["Enums"]["activity_intensity"]
+          notes?: string | null
+          performed_at?: string
+          screenshot_url?: string | null
+          source_app?: string | null
+          user_id?: string
+          validated?: boolean
+        }
+        Relationships: []
+      }
+      event_attendances: {
+        Row: {
+          amount_paid_cents: number
+          credits_spent: number
+          event_id: string
+          id: string
+          paid_at: string | null
+          reserved_at: string
+          status: Database["public"]["Enums"]["attendance_status"]
+          user_id: string
+        }
+        Insert: {
+          amount_paid_cents?: number
+          credits_spent?: number
+          event_id: string
+          id?: string
+          paid_at?: string | null
+          reserved_at?: string
+          status?: Database["public"]["Enums"]["attendance_status"]
+          user_id: string
+        }
+        Update: {
+          amount_paid_cents?: number
+          credits_spent?: number
+          event_id?: string
+          id?: string
+          paid_at?: string | null
+          reserved_at?: string
+          status?: Database["public"]["Enums"]["attendance_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_attendances_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          category: string | null
+          created_at: string
+          credits_required: number
+          description: string | null
+          id: string
+          image_url: string | null
+          name: string
+          price_cents: number
+          starts_at: string
+          venue: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          credits_required?: number
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name: string
+          price_cents?: number
+          starts_at: string
+          venue: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          credits_required?: number
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          price_cents?: number
+          starts_at?: string
+          venue?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          event_id: string
+          id: string
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          event_id: string
+          id?: string
+          rating: number
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          event_id?: string
+          id?: string
+          rating?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +206,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      activity_intensity: "low" | "medium" | "high"
+      attendance_status: "reserved" | "paid" | "cancelled" | "attended"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +334,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      activity_intensity: ["low", "medium", "high"],
+      attendance_status: ["reserved", "paid", "cancelled", "attended"],
+    },
   },
 } as const

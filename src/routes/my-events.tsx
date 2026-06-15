@@ -17,11 +17,12 @@ export const Route = createFileRoute("/my-events")({
   component: MyEventsPage,
 });
 
+type ReviewRow = { id: string; rating: number; comment: string | null; user_id?: string };
 type AttendanceRow = {
   id: string; event_id: string; status: string;
   credits_spent: number; amount_paid_cents: number;
   events: { id: string; name: string; venue: string; image_url: string | null; starts_at: string; category: string | null } | null;
-  reviews: { id: string; rating: number; comment: string | null }[];
+  reviews: ReviewRow[];
 };
 
 function MyEventsPage() {
@@ -38,7 +39,7 @@ function MyEventsPage() {
         .eq("user_id", u!.id)
         .order("reserved_at", { ascending: false });
       if (error) throw error;
-      const rows = (data ?? []) as unknown as Array<AttendanceRow & { reviews: Array<AttendanceRow["reviews"][number] & { user_id: string }> }>;
+      const rows = (data ?? []) as unknown as AttendanceRow[];
       return rows.map((r) => ({ ...r, reviews: r.reviews.filter((rv) => rv.user_id === u!.id) }));
     },
   });

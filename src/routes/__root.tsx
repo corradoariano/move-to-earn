@@ -82,11 +82,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "ActiveCircle — Move More. Unlock More." },
       { name: "description", content: "Earn credits for your workouts and unlock unique events." },
       { name: "author", content: "ActiveCircle" },
-      { property: "og:title", content: "ActiveCircle" },
+      { property: "og:title", content: "ActiveCircle — Move More. Unlock More." },
       { property: "og:description", content: "Earn credits for your workouts and unlock unique events." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "ActiveCircle — Move More. Unlock More." },
+      { name: "twitter:description", content: "Earn credits for your workouts and unlock unique events." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/d1546228-8855-4e80-af31-0bef9f7c5f78" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/d1546228-8855-4e80-af31-0bef9f7c5f78" },
     ],
     links: [
       {

@@ -203,7 +203,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      reserve_event_paid: {
+        Args: { _event_id: string }
+        Returns: {
+          amount_paid_cents: number
+          credits_spent: number
+          event_id: string
+          id: string
+          paid_at: string | null
+          reserved_at: string
+          status: Database["public"]["Enums"]["attendance_status"]
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_attendances"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       activity_intensity: "low" | "medium" | "high"

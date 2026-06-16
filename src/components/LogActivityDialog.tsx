@@ -15,6 +15,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { extractActivityFromImage } from "@/lib/extract-activity.functions";
+import { classifyActivityIntensity } from "@/lib/classify-intensity.functions";
 import { ACTIVITY_TYPES, OTHER_ACTIVITY, calcCredits, intensityForActivity, type Intensity } from "@/lib/credits";
 import { AlertTriangle, Loader2, Plus, RefreshCw, Sparkles, Upload } from "lucide-react";
 
@@ -22,6 +23,7 @@ export default function LogActivityDialog() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const extract = useServerFn(extractActivityFromImage);
+  const classify = useServerFn(classifyActivityIntensity);
   const [open, setOpen] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -36,8 +38,24 @@ export default function LogActivityDialog() {
   const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
   const [aiConfidence, setAiConfidence] = useState<number | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
+  const [classifying, setClassifying] = useState(false);
 
   const isOther = activityType === OTHER_ACTIVITY;
+  const classifyOther = async () => {
+    const name = customActivity.trim();
+    if (!name) return;
+    setClassifying(true);
+    try {
+      const out = await classify({ data: { activity: name } });
+      setOtherIntensity(out.intensity);
+      toast.success(`Intensity set to "${out.intensity}" (WHO guidelines).`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not classify activity");
+    } finally {
+      setClassifying(false);
+    }
+  };
+
   const intensity: Intensity = isOther ? otherIntensity : intensityForActivity(activityType);
   const credits = calcCredits(intensity, Number(minutes) || 0);
   const lowConfidence = aiConfidence !== null && aiConfidence < 0.5;
@@ -216,18 +234,23 @@ export default function LogActivityDialog() {
                     placeholder="e.g. Paddleboarding, Skating…"
                     value={customActivity}
                     onChange={(e) => setCustomActivity(e.target.value)}
+                    onBlur={() => void classifyOther()}
                   />
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Intensity will be auto-assigned from WHO guidelines once you finish typing.
+                  </p>
                 </div>
                 <div className="col-span-2">
-                  <Label>Intensity (WHO)</Label>
+                  <Label>Intensity (WHO){classifying && " — detecting…"}</Label>
                   <Select value={otherIntensity} onValueChange={(v) => setOtherIntensity(v as Intensity)}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger disabled={classifying}><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="low">Low — leisurely, easy to talk &amp; sing</SelectItem>
                       <SelectItem value="medium">Medium — noticeable effort, can still talk</SelectItem>
                       <SelectItem value="high">High — hard effort, breathing heavily</SelectItem>
                     </SelectContent>
                   </Select>
+                  <p className="mt-1 text-xs text-muted-foreground">Auto-assigned — adjust if needed.</p>
                 </div>
               </>
             )}

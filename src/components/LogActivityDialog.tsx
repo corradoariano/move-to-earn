@@ -15,7 +15,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { extractActivityFromImage } from "@/lib/extract-activity.functions";
-import { ACTIVITY_TYPES, calcCredits, type Intensity } from "@/lib/credits";
+import { ACTIVITY_TYPES, calcCredits, intensityForActivity, type Intensity } from "@/lib/credits";
 import { Loader2, Plus, Sparkles, Upload } from "lucide-react";
 
 export default function LogActivityDialog() {
@@ -26,8 +26,7 @@ export default function LogActivityDialog() {
   const [scanning, setScanning] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const [activityType, setActivityType] = useState<string>("Run");
-  const [intensity, setIntensity] = useState<Intensity>("medium");
+  const [activityType, setActivityType] = useState<string>("Running");
   const [minutes, setMinutes] = useState<number>(45);
   const [performedAt, setPerformedAt] = useState<string>(() => new Date().toISOString().slice(0, 16));
   const [sourceApp, setSourceApp] = useState<string>("");
@@ -35,10 +34,11 @@ export default function LogActivityDialog() {
   const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
   const [aiConfidence, setAiConfidence] = useState<number | null>(null);
 
+  const intensity: Intensity = intensityForActivity(activityType);
   const credits = calcCredits(intensity, Number(minutes) || 0);
 
   const reset = () => {
-    setActivityType("Run"); setIntensity("medium"); setMinutes(45);
+    setActivityType("Running"); setMinutes(45);
     setPerformedAt(new Date().toISOString().slice(0, 16));
     setSourceApp(""); setNotes(""); setScreenshotFile(null); setAiConfidence(null);
   };
@@ -54,8 +54,12 @@ export default function LogActivityDialog() {
         fr.readAsDataURL(file);
       });
       const out = await extract({ data: { imageBase64: b64, mimeType: file.type || "image/jpeg" } });
-      setActivityType(out.activity_type);
-      setIntensity(out.intensity);
+      // Match AI-detected type to one of our known activities (case-insensitive),
+      // otherwise keep the current selection. Intensity is derived from the type.
+      const match = ACTIVITY_TYPES.find(
+        (t) => t.toLowerCase() === out.activity_type.toLowerCase(),
+      );
+      if (match) setActivityType(match);
       setMinutes(out.duration_minutes);
       try {
         const d = new Date(out.performed_at);
@@ -142,25 +146,22 @@ export default function LogActivityDialog() {
           )}
 
           <div className="grid grid-cols-2 gap-3">
-            <div>
+            <div className="col-span-2">
               <Label>Activity</Label>
               <Select value={activityType} onValueChange={setActivityType}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {ACTIVITY_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                  {ACTIVITY_TYPES.map((t) => (
+                    <SelectItem key={t} value={t}>
+                      {t} <span className="text-xs text-muted-foreground">· {intensityForActivity(t)}</span>
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div>
-              <Label>Intensity</Label>
-              <Select value={intensity} onValueChange={(v) => setIntensity(v as Intensity)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Intensity is set automatically using WHO guidelines:{" "}
+                <span className="font-medium capitalize text-foreground">{intensity}</span>.
+              </p>
             </div>
             <div>
               <Label>Duration (min)</Label>

@@ -241,16 +241,11 @@ export default function LogActivityDialog() {
                   </p>
                 </div>
                 <div className="col-span-2">
-                  <Label>Intensity (WHO){classifying && " — detecting…"}</Label>
-                  <Select value={otherIntensity} onValueChange={(v) => setOtherIntensity(v as Intensity)}>
-                    <SelectTrigger disabled={classifying}><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="low">Low — leisurely, easy to talk &amp; sing</SelectItem>
-                      <SelectItem value="medium">Medium — noticeable effort, can still talk</SelectItem>
-                      <SelectItem value="high">High — hard effort, breathing heavily</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <p className="mt-1 text-xs text-muted-foreground">Auto-assigned — adjust if needed.</p>
+                  <Label>Intensity{classifying && " — detecting…"}</Label>
+                  <Input value={otherIntensity} readOnly disabled className="capitalize" />
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Auto-assigned from WHO guidelines based on the activity you entered.
+                  </p>
                 </div>
               </>
             )}

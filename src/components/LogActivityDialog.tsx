@@ -15,8 +15,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { extractActivityFromImage } from "@/lib/extract-activity.functions";
-import { ACTIVITY_TYPES, calcCredits, intensityForActivity, type Intensity } from "@/lib/credits";
-import { Loader2, Plus, Sparkles, Upload } from "lucide-react";
+import { ACTIVITY_TYPES, OTHER_ACTIVITY, calcCredits, intensityForActivity, type Intensity } from "@/lib/credits";
+import { AlertTriangle, Loader2, Plus, RefreshCw, Sparkles, Upload } from "lucide-react";
 
 export default function LogActivityDialog() {
   const { user } = useAuth();
@@ -27,25 +27,34 @@ export default function LogActivityDialog() {
   const [saving, setSaving] = useState(false);
 
   const [activityType, setActivityType] = useState<string>("Running");
+  const [customActivity, setCustomActivity] = useState<string>("");
+  const [otherIntensity, setOtherIntensity] = useState<Intensity>("medium");
   const [minutes, setMinutes] = useState<number>(45);
   const [performedAt, setPerformedAt] = useState<string>(() => new Date().toISOString().slice(0, 16));
   const [sourceApp, setSourceApp] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
   const [screenshotFile, setScreenshotFile] = useState<File | null>(null);
   const [aiConfidence, setAiConfidence] = useState<number | null>(null);
+  const [scanError, setScanError] = useState<string | null>(null);
 
-  const intensity: Intensity = intensityForActivity(activityType);
+  const isOther = activityType === OTHER_ACTIVITY;
+  const intensity: Intensity = isOther ? otherIntensity : intensityForActivity(activityType);
   const credits = calcCredits(intensity, Number(minutes) || 0);
+  const lowConfidence = aiConfidence !== null && aiConfidence < 0.5;
+  const canSave = !saving && !scanning && (!isOther || customActivity.trim().length > 0);
+  const finalActivityType = isOther ? customActivity.trim() : activityType;
 
   const reset = () => {
-    setActivityType("Running"); setMinutes(45);
+    setActivityType("Running"); setCustomActivity(""); setOtherIntensity("medium"); setMinutes(45);
     setPerformedAt(new Date().toISOString().slice(0, 16));
-    setSourceApp(""); setNotes(""); setScreenshotFile(null); setAiConfidence(null);
+    setSourceApp(""); setNotes(""); setScreenshotFile(null); setAiConfidence(null); setScanError(null);
   };
 
   const onFile = async (file: File) => {
     setScreenshotFile(file);
     setScanning(true);
+    setScanError(null);
+    setAiConfidence(null);
     try {
       const b64: string = await new Promise((resolve, reject) => {
         const fr = new FileReader();
@@ -54,12 +63,25 @@ export default function LogActivityDialog() {
         fr.readAsDataURL(file);
       });
       const out = await extract({ data: { imageBase64: b64, mimeType: file.type || "image/jpeg" } });
+      if (out.confidence < 0.5) {
+        setAiConfidence(out.confidence);
+        setScanError(
+          "We couldn't reliably validate this screenshot. Please re-upload a clearer image of your activity summary.",
+        );
+        return;
+      }
       // Match AI-detected type to one of our known activities (case-insensitive),
-      // otherwise keep the current selection. Intensity is derived from the type.
+      // otherwise fall back to "Other" with the detected name. Intensity is derived from the type.
       const match = ACTIVITY_TYPES.find(
         (t) => t.toLowerCase() === out.activity_type.toLowerCase(),
       );
-      if (match) setActivityType(match);
+      if (match) {
+        setActivityType(match);
+      } else if (out.activity_type) {
+        setActivityType(OTHER_ACTIVITY);
+        setCustomActivity(out.activity_type);
+        setOtherIntensity(out.intensity);
+      }
       setMinutes(out.duration_minutes);
       try {
         const d = new Date(out.performed_at);
@@ -70,7 +92,9 @@ export default function LogActivityDialog() {
       setAiConfidence(out.confidence);
       toast.success(`Activity detected (${Math.round(out.confidence * 100)}% confidence). Review and save.`);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not read screenshot");
+      const msg = err instanceof Error ? err.message : "Could not read screenshot";
+      setScanError(`${msg}. Please re-upload a clearer screenshot of your activity.`);
+      toast.error(msg);
     } finally {
       setScanning(false);
     }
@@ -90,7 +114,7 @@ export default function LogActivityDialog() {
       }
       const { error } = await supabase.from("activities").insert({
         user_id: user.id,
-        activity_type: activityType,
+        activity_type: finalActivityType,
         intensity,
         duration_minutes: Number(minutes),
         performed_at: new Date(performedAt).toISOString(),
@@ -139,9 +163,27 @@ export default function LogActivityDialog() {
             />
           </label>
 
-          {aiConfidence !== null && (
+          {scanError && (
+            <div className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+              <div className="flex-1">
+                <p className="font-medium">Screenshot couldn't be validated</p>
+                <p className="mt-0.5">{scanError}</p>
+                <label className="mt-2 inline-flex cursor-pointer items-center gap-1 font-medium underline">
+                  <RefreshCw className="h-3 w-3" /> Re-upload screenshot
+                  <input
+                    type="file" accept="image/*" className="hidden"
+                    onChange={(e) => { const f = e.target.files?.[0]; if (f) void onFile(f); }}
+                  />
+                </label>
+              </div>
+            </div>
+          )}
+
+          {aiConfidence !== null && !scanError && (
             <div className="rounded-md bg-accent/40 px-3 py-2 text-xs text-accent-foreground">
               AI detected fields — please review before saving ({Math.round(aiConfidence * 100)}% confidence).
+              {lowConfidence && " Low confidence — consider re-uploading a clearer screenshot."}
             </div>
           )}
 
@@ -156,13 +198,39 @@ export default function LogActivityDialog() {
                       {t} <span className="text-xs text-muted-foreground">· {intensityForActivity(t)}</span>
                     </SelectItem>
                   ))}
+                  <SelectItem value={OTHER_ACTIVITY}>Other (specify)</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Intensity is set automatically using WHO guidelines:{" "}
-                <span className="font-medium capitalize text-foreground">{intensity}</span>.
-              </p>
+              {!isOther && (
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Intensity is set automatically using WHO guidelines:{" "}
+                  <span className="font-medium capitalize text-foreground">{intensity}</span>.
+                </p>
+              )}
             </div>
+            {isOther && (
+              <>
+                <div className="col-span-2">
+                  <Label>Specify activity</Label>
+                  <Input
+                    placeholder="e.g. Paddleboarding, Skating…"
+                    value={customActivity}
+                    onChange={(e) => setCustomActivity(e.target.value)}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <Label>Intensity (WHO)</Label>
+                  <Select value={otherIntensity} onValueChange={(v) => setOtherIntensity(v as Intensity)}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="low">Low — leisurely, easy to talk &amp; sing</SelectItem>
+                      <SelectItem value="medium">Medium — noticeable effort, can still talk</SelectItem>
+                      <SelectItem value="high">High — hard effort, breathing heavily</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
+            )}
             <div>
               <Label>Duration (min)</Label>
               <Input type="number" min={1} value={minutes} onChange={(e) => setMinutes(Number(e.target.value))} />
@@ -189,7 +257,7 @@ export default function LogActivityDialog() {
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button disabled={saving || scanning} onClick={save} className="bg-gradient-to-r from-primary to-primary-glow">
+          <Button disabled={!canSave} onClick={save} className="bg-gradient-to-r from-primary to-primary-glow">
             {saving ? "Saving…" : "Save activity"}
           </Button>
         </DialogFooter>

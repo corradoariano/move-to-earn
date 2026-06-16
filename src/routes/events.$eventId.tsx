@@ -64,18 +64,10 @@ function EventDetailPage() {
     if (!u) return;
     setPaying(true);
     try {
-      const { error: insErr } = await supabase.from("event_attendances").upsert(
-        {
-          user_id: u.id,
-          event_id: event.id,
-          status: "paid",
-          credits_spent: event.credits_required,
-          amount_paid_cents: event.price_cents,
-          paid_at: new Date().toISOString(),
-        },
-        { onConflict: "user_id,event_id" }
-      );
-      if (insErr) throw insErr;
+      const { error: rpcErr } = await supabase.rpc("reserve_event_paid", {
+        _event_id: event.id,
+      });
+      if (rpcErr) throw rpcErr;
       toast.success("Payment confirmed — you're in!");
       qc.invalidateQueries({ queryKey: ["attendance", eventId] });
       qc.invalidateQueries({ queryKey: ["credit-balance"] });

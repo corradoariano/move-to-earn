@@ -38,6 +38,8 @@ export const ACTIVITY_INTENSITY: Record<string, Intensity> = {
 
 export const ACTIVITY_TYPES = Object.keys(ACTIVITY_INTENSITY);
 
+export const OTHER_ACTIVITY = "Other" as const;
+
 export function intensityForActivity(activityType: string): Intensity {
   return ACTIVITY_INTENSITY[activityType] ?? "medium";
 }

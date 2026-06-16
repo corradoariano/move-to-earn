@@ -93,7 +93,6 @@ export default function LogActivityDialog() {
         source_app: sourceApp || null,
         screenshot_url: screenshotUrl,
         notes: notes || null,
-        credits_earned: credits,
         validated: true,
       });
       if (error) throw error;

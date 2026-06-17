@@ -111,7 +111,7 @@ function EventDetailPage() {
 
           <div className="rounded-xl border bg-secondary/40 p-5">
             <div className="text-sm text-muted-foreground">Ticket price</div>
-            <div className="text-3xl font-bold">{event.price_cents === 0 ? "Free" : `$${(event.price_cents / 100).toFixed(2)}`}</div>
+            <div className="text-3xl font-bold">{event.price_cents === 0 ? "Free" : `£${(event.price_cents / 100).toFixed(2)}`}</div>
             <div className="mt-2 text-xs text-muted-foreground">
               + {event.credits_required} credits from your balance ({avail} available)
             </div>

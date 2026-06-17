@@ -27,6 +27,7 @@ const nav = [
   { to: "/activities", label: "Activity", icon: Activity },
   { to: "/events", label: "Events", icon: Ticket },
   { to: "/my-events", label: "My Events", icon: Calendar },
+  { to: "/about", label: "About", icon: Info },
 ];
 
 export default function AppLayout({ children }: { children: ReactNode }) {

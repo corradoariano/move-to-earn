@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { Activity, Calendar, LogOut, Sparkles, Ticket } from "lucide-react";
+import { Activity, Calendar, Info, LogOut, Sparkles, Ticket } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { type ReactNode } from "react";
@@ -27,6 +27,7 @@ const nav = [
   { to: "/activities", label: "Activity", icon: Activity },
   { to: "/events", label: "Events", icon: Ticket },
   { to: "/my-events", label: "My Events", icon: Calendar },
+  { to: "/about", label: "About", icon: Info },
 ];
 
 export default function AppLayout({ children }: { children: ReactNode }) {

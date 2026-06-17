@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { Activity, Calendar, LogOut, Sparkles, Ticket } from "lucide-react";
+import { Activity, Calendar, Info, LogOut, Sparkles, Ticket } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { type ReactNode } from "react";

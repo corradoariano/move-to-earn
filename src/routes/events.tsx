@@ -70,7 +70,7 @@ function EventsPage() {
                     <div className="flex items-center gap-1"><MapPin className="h-3 w-3" />{e.venue}</div>
                   </div>
                   <div className="mt-3 text-sm font-semibold">
-                    {e.price_cents === 0 ? "Free" : `$${(e.price_cents / 100).toFixed(2)}`}
+                    {e.price_cents === 0 ? "Free" : `£${(e.price_cents / 100).toFixed(2)}`}
                   </div>
                 </div>
               </Card>

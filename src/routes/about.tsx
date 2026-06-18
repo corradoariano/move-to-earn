@@ -31,7 +31,7 @@ function AboutPage() {
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             We're a small, London-based startup on a mission to revolutionise health
-            motivation and socialisation. Looking after your body shouldn't
+            motivation and socialisation: looking after your body shouldn't
             cost you your social life.
           </p>
         </div>

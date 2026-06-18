@@ -74,7 +74,7 @@ function AboutPage() {
 
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           {[
-            { icon: Dumbbell, title: "Any activity counts", body: "Walks, lifts, swims, stretches: log it and earn credits." },
+            { icon: Dumbbell, title: "Any activity counts", body: "Walks, lifts, swims, stretches - log it and earn credits." },
             { icon: Sparkles, title: "Curated to you", body: "Events matched to your taste, across the city you live in." },
             { icon: Trophy, title: "Treat yourself", body: "Spend credits on real perks - because you earned them." },
           ].map((f) => (

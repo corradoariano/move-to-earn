@@ -31,7 +31,7 @@ function AboutPage() {
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
             We're a small, London-based startup on a mission to revolutionise health
-            motivation and socialisation — because looking after your body shouldn't
+            motivation and socialisation. Looking after your body shouldn't
             cost you your social life.
           </p>
         </div>
@@ -67,16 +67,16 @@ function AboutPage() {
           </h2>
           <p className="mt-3 text-base leading-relaxed text-muted-foreground">
             We offer discounts to events curated to your taste, for any level of
-            activity you do — whether that's running, climbing, hitting the gym, or
+            activity you do - whether that's running, climbing, hitting the gym, or
             just plain old walking.
           </p>
         </div>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           {[
-            { icon: Dumbbell, title: "Any activity counts", body: "Walks, lifts, swims, stretches — log it and earn credits." },
+            { icon: Dumbbell, title: "Any activity counts", body: "Walks, lifts, swims, stretches: log it and earn credits." },
             { icon: Sparkles, title: "Curated to you", body: "Events matched to your taste, across the city you live in." },
-            { icon: Trophy, title: "Treat yourself", body: "Spend credits on real perks — because you earned them." },
+            { icon: Trophy, title: "Treat yourself", body: "Spend credits on real perks - because you earned them." },
           ].map((f) => (
             <div key={f.title} className="rounded-2xl bg-background p-5 shadow-sm">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-glow text-primary-foreground">
@@ -96,7 +96,7 @@ function AboutPage() {
           <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
             all activity should be rewarded
           </span>
-          {" "}— because going out and helping your mind and body is worth treating yourself for.
+          {", "}because going out and helping your mind and body is worth treating yourself for.
         </p>
       </section>
     </AppLayout>

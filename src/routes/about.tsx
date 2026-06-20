@@ -73,12 +73,10 @@ function AboutPage() {
         <div className="max-w-2xl">
           <Sparkles className="h-8 w-8 text-primary" />
           <h2 className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">
-            The ActiveCircle concept
+            The ActiveCircle Concept
           </h2>
           <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-            We offer discounts to events curated to your taste, for any level of
-            activity you do - whether that's running, climbing, hitting the gym, or
-            just plain old walking.
+            We believe that an active lifestyle can work well with an active social life. That's why we offer discounts to events curated to your taste, for any level of activity you do—whether that be running, climbing, going to the gym, or just plain old walking.
           </p>
         </div>
 

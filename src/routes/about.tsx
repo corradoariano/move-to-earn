@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import AppLayout from "@/components/AppLayout";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Heart, Users, Sparkles, Trophy, MapPin, Dumbbell } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
@@ -27,13 +28,22 @@ function AboutPage() {
             <MapPin className="h-3.5 w-3.5 text-primary" /> Made in London
           </div>
           <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl">
-            Movement that <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">rewards you</span>.
+            Movement that <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">rewards you</span>
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mt-6 text-lg font-semibold sm:text-xl">
+            Move more. Unlock more.
+          </p>
+          <p className="mt-3 text-base leading-relaxed text-muted-foreground sm:text-lg">
             We're a small, London-based startup on a mission to revolutionise health
             motivation and socialisation - looking after your body shouldn't
             cost you your social life.
           </p>
+          <p className="mt-3 text-base font-medium sm:text-lg">
+            Actively expand your circle
+          </p>
+          <Link to="/activities">
+            <Button className="mt-6">Start now</Button>
+          </Link>
         </div>
       </section>
 

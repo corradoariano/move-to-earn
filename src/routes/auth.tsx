@@ -65,7 +65,7 @@ function AuthPage() {
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-glow text-primary-foreground">
             <Sparkles className="h-5 w-5" />
           </div>
-          <h1 className="text-2xl font-bold">{mode === "signin" ? "Welcome back" : "Join ActiveCircle"}</h1>
+          <h1 className="text-2xl font-bold">{mode === "signin" ? "Welcome Back" : "Join ActiveCircle"}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {mode === "signin" ? "Sign in to log workouts and unlock events." : "Start earning credits for your activity."}
           </p>

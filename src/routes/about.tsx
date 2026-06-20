@@ -28,7 +28,7 @@ function AboutPage() {
             <MapPin className="h-3.5 w-3.5 text-primary" /> Made in London
           </div>
           <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl">
-            Movement that <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">rewards you</span>
+            Movement That <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">Rewards You</span>
           </h1>
           <p className="mt-6 text-lg font-semibold sm:text-xl">
             Move more. Unlock more.
@@ -51,7 +51,7 @@ function AboutPage() {
       <section className="mt-10 grid gap-6 md:grid-cols-2">
         <Card className="p-6">
           <Heart className="h-8 w-8 text-primary" />
-          <h2 className="mt-4 text-xl font-semibold">We get it.</h2>
+          <h2 className="mt-4 text-xl font-semibold">We Get It.</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             It can be hard to find the time to stay active, especially when you don't
             want to sacrifice your social life or the fun activities that make a week
@@ -60,7 +60,7 @@ function AboutPage() {
         </Card>
         <Card className="p-6">
           <Users className="h-8 w-8 text-primary" />
-          <h2 className="mt-4 text-xl font-semibold">So we asked a question.</h2>
+          <h2 className="mt-4 text-xl font-semibold">So We Asked a Question.</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             What if prioritising your fitness could actually help your social life,
             instead of competing with it? That question is where ActiveCircle began.
@@ -82,9 +82,9 @@ function AboutPage() {
 
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           {[
-            { icon: Dumbbell, title: "Any activity counts", body: "Walks, lifts, swims, stretches - log it and earn credits." },
-            { icon: Sparkles, title: "Curated to you", body: "Events matched to your taste, across the city you live in." },
-            { icon: Trophy, title: "Treat yourself", body: "Spend credits on real perks - because you earned them." },
+            { icon: Dumbbell, title: "Any Activity Counts", body: "Walks, lifts, swims, stretches - log it and earn credits." },
+            { icon: Sparkles, title: "Curated to You", body: "Events matched to your taste, across the city you live in." },
+            { icon: Trophy, title: "Treat Yourself", body: "Spend credits on real perks - because you earned them." },
           ].map((f) => (
             <div key={f.title} className="rounded-2xl bg-background p-5 shadow-sm">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-glow text-primary-foreground">

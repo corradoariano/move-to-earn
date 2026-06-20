@@ -42,9 +42,9 @@ function Landing() {
             <Sparkles className="h-3 w-3 text-primary" /> Move-to-earn for real-world events
           </span>
           <h1 className="mt-6 text-5xl font-bold tracking-tight md:text-6xl">
-            Move more.<br />
+            Move More.<br />
             <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">
-              Unlock more.
+              Unlock More.
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
@@ -62,9 +62,9 @@ function Landing() {
 
         <section className="mx-auto grid max-w-5xl gap-4 px-4 pb-20 md:grid-cols-3">
           {[
-            { icon: Activity, title: "Track activity", body: "Upload a screenshot from any fitness app. AI reads the time, type, and intensity." },
-            { icon: Trophy, title: "Earn credits", body: "Intensity × minutes converts to ActiveCircle credits on your balance." },
-            { icon: Ticket, title: "Unlock events", body: "Browse curated events and spend credits to reserve your spot." },
+            { icon: Activity, title: "Track Activity", body: "Upload a screenshot from any fitness app. AI reads the time, type, and intensity." },
+            { icon: Trophy, title: "Earn Credits", body: "Intensity × minutes converts to ActiveCircle credits on your balance." },
+            { icon: Ticket, title: "Unlock Events", body: "Browse curated events and spend credits to reserve your spot." },
           ].map((f) => (
             <div key={f.title} className="rounded-2xl border bg-card p-6 shadow-sm">
               <f.icon className="h-6 w-6 text-primary" />

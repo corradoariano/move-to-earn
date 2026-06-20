@@ -35,11 +35,11 @@ function AboutPage() {
           </p>
           <p className="mt-3 text-base leading-relaxed text-muted-foreground sm:text-lg">
             We're a small, London-based startup on a mission to revolutionise health
-            motivation and socialisation - looking after your body shouldn't
+            motivation and socialisation, because looking after your body shouldn't
             cost you your social life.
           </p>
           <p className="mt-3 text-base font-medium sm:text-lg">
-            Actively expand your circle
+            Actively expand your circle.
           </p>
           <Link to="/activities">
             <Button className="mt-6">Start now</Button>

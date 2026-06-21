@@ -48,8 +48,7 @@ function Landing() {
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-            Log your workouts from Strava, Nike Run Club or any tracker. ActiveCircle turns minutes
-            into credits — spend them on yoga rooftops, live music, art nights, and more.
+            Log your workouts from Strava, Nike Run Club or any tracker. ActiveCircle converts your physical activity into credits — spend them on yoga rooftops, live music, art nights, and more.
           </p>
           <div className="mt-8 flex justify-center gap-3">
             <Link to="/auth">
